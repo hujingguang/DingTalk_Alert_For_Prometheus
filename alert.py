@@ -144,8 +144,6 @@ def start_app():
     tornado.ioloop.IOLoop.current().start()
 
 
-
 if __name__=="__main__":
     parse_opt()
     start_app()
-
