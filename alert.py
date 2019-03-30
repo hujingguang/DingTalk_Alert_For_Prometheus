@@ -40,7 +40,6 @@ def parse_opt():
     options,args=opt.parse_args()
     urls=options.webhooks
     port=options.port
-    print(port)
     if urls:
         for u in urls.split(','):
             k,v=u.split('==')
@@ -95,6 +94,8 @@ class DingTalkHandler(tornado.web.RequestHandler):
                 label_mess=''
                 for k,v in labels.items():
                     label_mess=label_mess+'\n'+k+":"+v
+        if status == "resolved":
+            status=status+" 告警恢复"
         mess= '''
 Summary: %s
 ---------------------------
