@@ -1,6 +1,9 @@
 # DingTalk_For_Prometheus
-钉钉告警For Promethues
+钉钉告警For Prometheus AlertManager
 
 
 Usage:
-  ./alert.py  --port=8060 --
+  ./alert.py  --help
+
+
+
