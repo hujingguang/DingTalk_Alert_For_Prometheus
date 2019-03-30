@@ -71,7 +71,7 @@ class DingTalkHandler(tornado.web.RequestHandler):
                 logger.info(str(e))
                 self.json_data=None
     def post(self):
-        mess='Prometheus Report: '+self.format_body()
+        mess='<font color=#FF0000 size=6 face="黑体"> Prometheus Report</font> \n'+self.format_body()
         logger.info(mess)
         post_webhook(self.webHook,mess)
 
@@ -93,26 +93,28 @@ class DingTalkHandler(tornado.web.RequestHandler):
             if labels:
                 label_mess=''
                 for k,v in labels.items():
-                    label_mess=label_mess+'\n'+k+":"+v
+                    label_mess=label_mess+"+ **"+k+"**"+": "+v+"\n"
         if status == "resolved":
             status=status+" 告警恢复"
         mess= '''
-Summary: %s
----------------------------
-Description: %s
-Status: %s
-StartTime: %s
-EndTime: %s
----------------------------
-Labels: 
-%s
-         ''' %(summary,description,status,startT,endT,label_mess)
++ **Summary**: %s 
++ **Description**: %s 
++ **Status**:%s 
++ **StartTime**:%s 
++ **Labels**: \n %s
+         ''' %(summary,description,status,startT,label_mess)
         return mess
 
 
 
 def  post_webhook(url,mess):
-    post_data={"msgtype":"text","text":{"content":mess}}
+    #post_data={"msgtype":"text","text":{"content":mess}}
+    post_data={"msgtype":"markdown",
+            "markdown":{
+                 "title":"Prometheus Monitor",
+                 "text":mess
+                }
+            }
     headers={"Content-Type":"application/json"}
     try:
         json_data=bytes(json.dumps(post_data),'utf-8')
