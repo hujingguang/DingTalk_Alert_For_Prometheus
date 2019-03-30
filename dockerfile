@@ -18,15 +18,15 @@ RUN yum install epel-release -y && yum clean all && yum makecache &>/dev/null &&
 RUN  yum install unzip -y &>/dev/null && wget ${setup_tools_url} && \
      unzip setuptools-40.8.0.zip && cd setuptools-40.8.0 && \
      /usr/local/python3.7/bin/python3 setup.py install && \
-     yum remove unzip -y && rm -rf ./*
+     yum remove unzip -y && cd / && rm -rf /opt/*
 
 RUN wget ${pip_url} && tar -xzf pip-19.0.3.tar.gz && cd pip-19.0.3 && \
-    /usr/local/python3.7/bin/python3 setup.py install &&  rm -rf ./* 
+    /usr/local/python3.7/bin/python3 setup.py install && cd / && rm -rf /opt/* 
 
 RUN /usr/local/python3.7/bin/pip install tornado==v5.0
 
 RUN mv /usr/bin/python /usr/bin/python.bak && ln -s /usr/local/python3.7/bin/python3 /usr/bin/python && \
-    sed -i 's/python/python2.6/g'  /usr/bin/yum
+    sed -i 's/python/python2.7/g'  /usr/bin/yum 
 
 ADD ./alert.py ./alert.py
 
