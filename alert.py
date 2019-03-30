@@ -66,7 +66,11 @@ class DingTalkHandler(tornado.web.RequestHandler):
         if self.request.headers.get("Content-Type").startswith("application/json"):
             self.json_data=json.loads(self.request.body)
         else:
-            self.json_data=None
+            try:
+                self.json_data=json.loads(self.request.body)
+            except Exception as e:
+                logger.info(str(e))
+                self.json_data=None
     def post(self):
         mess='Prometheus Report: '+self.format_body()
         logger.info(mess)
