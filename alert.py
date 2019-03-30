@@ -23,14 +23,22 @@ def parse_opt():
     global WEB_HOOKS
     usage='''
     dingtalk alert for prometheus alertmanager .
-    --listen-port=8060
-    --urls="group_1==dingtalk_webhook_url_1,group_2==dingtalk_webhook_url_2"
+    --port=8060
+    --webhooks="group_1==dingtalk_webhook_url_1,group_2==dingtalk_webhook_url_2"
+
+    Example:
+
+     # send message to dingtalk_webhook_url_1
+     curl -XPOST -H "Content-Type:application/json" -d"your_json_data"  localhost:8060/dingtalk/group_1/send
+
+     # send message to dingtalk_webhook_url_2
+     curl -XPOST -H "Content-Type:application/json" -d"your_json_data"  localhost:8060/dingtalk/group_2/send
     '''
     opt=OptionParser(usage)
-    opt.add_option('-u','--urls',action='store',type='string')
+    opt.add_option('-w','--webhooks',action='store',type='string')
     opt.add_option('-p','--port',action='store',type='string')
     options,args=opt.parse_args()
-    urls=options.urls
+    urls=options.webhooks
     port=options.port
     if urls:
         for u in urls.split(','):
