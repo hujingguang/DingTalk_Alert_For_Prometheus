@@ -20,7 +20,7 @@ DEFAULT_LISTEN_PORT=8060
 
 
 def parse_opt():
-    global WEB_HOOKS
+    global WEB_HOOKS,DEFAULT_LISTEN_PORT
     usage='''
     dingtalk alert for prometheus alertmanager .
     --port=8060
@@ -40,6 +40,7 @@ def parse_opt():
     options,args=opt.parse_args()
     urls=options.webhooks
     port=options.port
+    print(port)
     if urls:
         for u in urls.split(','):
             k,v=u.split('==')
