@@ -71,9 +71,10 @@ class DingTalkHandler(tornado.web.RequestHandler):
                 logger.info(str(e))
                 self.json_data=None
     def post(self):
-        mess='<font color=#FF0000 size=6 face="黑体"> Prometheus Report</font> \n'+self.format_body()
-        logger.info(mess)
-        post_webhook(self.webHook,mess)
+        for mess in self.format_body():
+            mess='<font color=#FF0000 size=6 face="黑体"> Prometheus Report</font> \n'+mess
+            logger.info(mess)
+            post_webhook(self.webHook,mess)
 
 
     def format_body(self):
@@ -81,29 +82,32 @@ class DingTalkHandler(tornado.web.RequestHandler):
         print(body)
         status=body.get('status',' ')
         alerts=body.get('alerts',[])
+        sendList=list()
         if alerts:
-            info=alerts[0]
-            annotations=info.get('annotations',' ')
-            description=annotations.get('description',' ')
-            summary=annotations.get('summary',' ')
-            status=info.get('status',' ')
-            startT=info.get('startsAt',' ')
-            endT=info.get('endsAt',' ')
-            labels=info.get('labels',{})
-            if labels:
-                label_mess=''
-                for k,v in labels.items():
-                    label_mess=label_mess+"+ **"+k+"**"+": "+v+"\n"
-        if status == "resolved":
-            status=status+" 告警恢复"
-        mess= '''
+            for alert in alerts:
+                info=alert
+                annotations=info.get('annotations',' ')
+                description=annotations.get('description',' ')
+                summary=annotations.get('summary',' ')
+                status=info.get('status',' ')
+                startT=info.get('startsAt',' ')
+                endT=info.get('endsAt',' ')
+                labels=info.get('labels',{})
+                if labels:
+                    label_mess=''
+                    for k,v in labels.items():
+                        label_mess=label_mess+"+ **"+k+"**"+": "+v+"\n"
+                if status == "resolved":
+                    status=status+" 告警恢复"
+                mess= '''
 + **Summary**: %s 
 + **Description**: %s 
 + **Status**:%s 
 + **StartTime**:%s 
 + **Labels**: \n %s
-         ''' %(summary,description,status,startT,label_mess)
-        return mess
+            ''' %(summary,description,status,startT,label_mess)
+                sendList.append(mess)
+        return sendList
 
 
 
