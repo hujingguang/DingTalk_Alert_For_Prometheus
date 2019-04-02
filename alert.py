@@ -10,6 +10,7 @@ from tornado import httpclient
 import urllib
 from urllib import request
 import json
+from datetime import datetime
 
 
 logging.basicConfig(level=logging.INFO,format="%(asctime)s  - %(levelname)s - %(message)s")
@@ -82,6 +83,7 @@ class DingTalkHandler(tornado.web.RequestHandler):
         print(body)
         status=body.get('status',' ')
         alerts=body.get('alerts',[])
+        alert_datetime=datetime.strftime(datetime.now(),'%Y-%m-%d %H:%M:%S')
         sendList=list()
         if alerts:
             for alert in alerts:
@@ -105,7 +107,7 @@ class DingTalkHandler(tornado.web.RequestHandler):
 + **Status**:%s 
 + **StartTime**:%s 
 + **Labels**: \n %s
-            ''' %(summary,description,status,startT,label_mess)
+            ''' %(summary,description,status,alert_datetime,label_mess)
                 sendList.append(mess)
         return sendList
 
