@@ -8,6 +8,7 @@ ARG Py_Lib="tornado==v5.0"
 
 WORKDIR /opt
 
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum install epel-release -y && yum clean all && yum makecache &>/dev/null && \
     yum install wget gcc openssl-devel openssl make libffi-devel  -y &>/dev/null && \
     wget ${Download_Url} && \
